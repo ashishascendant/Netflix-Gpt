@@ -1,8 +1,25 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./Header";
+import { validate } from "../utils/validate";
+
+
+
 
 const Login = () => {
-  const[signin,setsignin]= useState(true);
+  
+   const email = useRef(null);
+   const pass = useRef(null);  // hooks are used at the top of the functional component and then te functions can be used.
+   const[signin,setsignin]= useState(true);
+   const[error,seterror] = useState(null);
+  
+   const HandleClick= (e) =>{
+    e.preventDefault();
+   console.log(email.current.value)
+   console.log(pass.current.value)
+   const mess= validate(email.current.value,pass.current.value);
+   seterror(mess);
+ }
+  
   const togglesignin= ()=>{
       setsignin(!signin);
   }
@@ -27,20 +44,27 @@ const Login = () => {
     <h1 className="text-4xl font-bold mb-8">{signin ? "Sign In " : "Sign Up"}</h1>
 
     <input
+      ref={email}
       type="text"
       placeholder="Email or phone number"
       className="w-full p-4 mb-4 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600"
     />
 
     <input
+      ref = {pass}
       type="password"
       placeholder="Password"
       className="w-full p-4 mb-6 bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600"
     />
+{error && (
+  <p className="bg-red-600 text-white text-sm p-3 rounded mt-4 mb-4">
+    {error}
+  </p>
+)}
 
     <button
       className="w-full bg-red-600 py-3 rounded-md font-semibold text-lg hover:bg-red-700 transition duration-200"
-
+      onClick={HandleClick}
     >
       {signin ? "Sign In" : "Sign Up"}
     </button>

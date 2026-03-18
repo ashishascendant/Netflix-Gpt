@@ -1,11 +1,12 @@
 import React from "react";
 import Body from "./components/Body";
 import Header from "./components/Header";
+import Login from "./components/Login";
 
 function App() {
   return (
     <div>
-     <Header/>
+    
      <Body/>
     </div>
   );
