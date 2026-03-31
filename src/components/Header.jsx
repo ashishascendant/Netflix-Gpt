@@ -1,20 +1,31 @@
-import { signOut } from "firebase/auth";
-import React, { useState } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser, removeUser } from "../utils/userSlice";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const user = useSelector((store) => store.user);
+  const dispatch = useDispatch();
+   const naviagte = useNavigate();
+  
 
-  const navigate = useNavigate();
-  const handlesignout= ()=>{
-    signOut(auth)
-    .then(()=>{
-      navigate("/");
-    })
-  }
+ useEffect(()=>{
+       onAuthStateChanged(auth, (user) => {
+    if (user) {
+        const {uid , email ,displayName }= user;
+        dispatch(addUser({uid:uid,email:email, displayname:displayName}))
+        naviagte("/browse")
+    } else {
+        dispatch(removeUser());
+        naviagte("/")
+    }
+});
+ },[])
+
+ 
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -69,7 +80,7 @@ const Header = () => {
 
               <hr className="border-gray-600" />
 
-              <button className="text-red-500 hover:underline cursor-pointer" onClick={handlesignout}>
+              <button className="text-red-500 hover:underline cursor-pointer" >
                 Sign Out of Netflix
               </button>
 
