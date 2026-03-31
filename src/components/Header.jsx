@@ -13,15 +13,16 @@ const Header = () => {
   
 
  useEffect(()=>{
-       onAuthStateChanged(auth, (user) => {
+      const unsubscribe= onAuthStateChanged(auth, (user) => {
     if (user) {
-        const {uid , email ,displayName }= user;
+        const {uid , email ,displayName } = user;
         dispatch(addUser({uid:uid,email:email, displayname:displayName}))
         naviagte("/browse")
     } else {
         dispatch(removeUser());
         naviagte("/")
     }
+    return ()=> unsubscribe();
 });
  },[])
 
